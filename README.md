@@ -8,11 +8,11 @@ Drop this configuration into any PHP/Laravel project and Claude Code will route 
 
 | Agent | Model | Responsibility |
 |-------|-------|----------------|
-| **Router** | Sonnet | Classifies tasks, dispatches to agents, narrates progress |
+| **Router** | Haiku | Classifies tasks, dispatches to agents, narrates progress |
 | **Backend Dev** | Opus | PHP code, APIs, business logic, refactoring |
 | **DBA** | Opus | Schema design, migrations, query optimization |
-| **Ops** | Opus | Deployments, infrastructure, monitoring, incident response |
-| **QA** | Sonnet | Testing, regression checks, verification |
+| **Ops** | Sonnet | Deployments, infrastructure, monitoring, incident response |
+| **QA** | Haiku | Testing, regression checks, verification |
 
 ## How It Works
 

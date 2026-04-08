@@ -1,7 +1,7 @@
 ---
 name: ops
 description: Operations – deploy, infrastructure, monitoring, CI/CD
-model: opus
+model: sonnet
 tools: Read, Bash, Glob, Grep, Edit
 skills:
   - server-infra

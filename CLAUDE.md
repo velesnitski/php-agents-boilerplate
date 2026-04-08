@@ -20,11 +20,11 @@ The Router will automatically classify it, pick the workflow, and dispatch to th
 
 | Agent | Model | Role |
 |-------|-------|------|
-| `router` | sonnet | Task dispatcher and orchestrator |
+| `router` | haiku | Task dispatcher and orchestrator |
 | `backend-dev` | opus | PHP code, APIs, business logic |
 | `dba` | opus | Schema, migrations, query optimization |
-| `ops` | opus | Deploy, infra, monitoring |
-| `qa` | sonnet | Testing and verification |
+| `ops` | sonnet | Deploy, infra, monitoring |
+| `qa` | haiku | Testing and verification |
 
 ## Routing Paths
 
