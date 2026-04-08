@@ -1,6 +1,7 @@
 ---
 name: work-conventions
 description: Shared team conventions for code, commits, documentation, and communication
+user-invocable: false
 ---
 
 # Work Conventions

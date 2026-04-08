@@ -1,6 +1,7 @@
 ---
 name: server-infra
 description: Docker Compose infrastructure – services, logs, health checks, Makefile workflow
+user-invocable: false
 ---
 
 # Server Infrastructure

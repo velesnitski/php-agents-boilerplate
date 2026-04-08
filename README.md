@@ -53,16 +53,15 @@ your-project/
 │   │   ├── dba.md             # database architect
 │   │   ├── ops.md             # DevOps/SRE
 │   │   └── qa.md              # QA engineer
-│   └── skills/
-│       ├── work-conventions.md     # git, code style, ADR, security
-│       ├── php-stack.md            # Laravel 11 / PHP 8.2 reference
-│       ├── repository-pattern.md   # contracts + repositories
-│       ├── testing-strategy.md     # PHPUnit conventions
-│       ├── db-operations.md        # migration safety, optimization
-│       ├── docker-workflow.md      # Docker Compose multi-env setup
-│       ├── server-infra.md         # Docker services, logs, health
-│       ├── deploy-procedures.md    # Makefile-driven deploy
-│       └── adr-documentation.md    # architecture decision records
+│   └── skills/                         # Agent Skills (Anthropic SKILL.md standard)
+│       ├── work-conventions/SKILL.md   # git, code style, ADR, security
+│       ├── php-stack/SKILL.md          # Laravel 11 / PHP 8.2 reference
+│       ├── testing-strategy/SKILL.md   # PHPUnit conventions
+│       ├── db-operations/SKILL.md      # migration safety, optimization
+│       ├── docker-workflow/SKILL.md    # Docker Compose, deploy, rollback
+│       ├── server-infra/SKILL.md       # Docker services, logs, health
+│       ├── adr-documentation/SKILL.md  # architecture decision records
+│       └── repository-pattern/SKILL.md # contracts + repositories (on-demand)
 ├── CLAUDE.md
 └── ... your project files
 ```
@@ -166,16 +165,19 @@ Then add routing rules in `router.md`.
 
 ### Adding a new skill
 
-Create `.claude/skills/your-skill.md`:
+Create `.claude/skills/your-skill/SKILL.md` (follows [Anthropic's Agent Skills standard](https://agentskills.io)):
 
 ```yaml
 ---
 name: your-skill
-description: What knowledge this provides
+description: What knowledge this provides (max 250 chars)
+user-invocable: false    # background knowledge, not a slash command
 ---
+
+# Skill content here
 ```
 
-Reference it in the agent's `skills:` frontmatter.
+Reference it in the agent's `skills:` frontmatter. The directory can also contain supporting files (examples, scripts, templates).
 
 ### Adapting for other frameworks
 
