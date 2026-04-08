@@ -5,7 +5,6 @@ model: opus
 tools: Read, Write, Edit, Glob, Grep, Bash
 skills:
   - php-stack
-  - repository-pattern
   - testing-strategy
   - work-conventions
 ---

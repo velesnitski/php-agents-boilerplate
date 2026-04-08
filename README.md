@@ -109,14 +109,13 @@ Skills are shared knowledge bases that agents reference:
 | Skill | Used By | Purpose |
 |-------|---------|---------|
 | `work-conventions` | All agents | Git workflow, code style (Pint/PHPStan), ADR, security |
-| `php-stack` | Backend Dev | Laravel 11 / PHP 8.2 structure, patterns, Makefile commands |
-| `repository-pattern` | Backend Dev | Contracts + Repositories, dependency injection |
+| `php-stack` | Backend Dev | Laravel 11 / PHP 8.2 structure, patterns, tooling |
 | `testing-strategy` | Backend Dev, QA | PHPUnit 11, feature vs unit, coverage, Allure reporting |
 | `db-operations` | DBA | Migration safety, query optimization, backup/restore |
-| `docker-workflow` | Ops, Backend Dev | Docker Compose multi-env, Makefile, staging deploys |
+| `docker-workflow` | Ops | Docker Compose, Makefile, deploy, rollback (all-in-one) |
 | `server-infra` | Ops | Docker services, logs, health checks, troubleshooting |
-| `deploy-procedures` | Ops | Makefile-driven deploy, staging SSH, rollback procedures |
 | `adr-documentation` | All agents | When and how to write Architecture Decision Records |
+| `repository-pattern` | On-demand | Contracts + Repositories (loaded when needed, not by default) |
 
 ## Tech Stack (as configured)
 
