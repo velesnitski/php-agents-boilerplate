@@ -36,7 +36,7 @@ Each agent produces structured output and stays within its defined scope. Agents
 
 ```bash
 # From your PHP/Laravel project root
-git clone https://github.com/user/php-agents.git /tmp/php-agents
+git clone https://github.com/velesnitski/php-agents-boilerplate.git /tmp/php-agents
 cp -r /tmp/php-agents/.claude .claude
 cp /tmp/php-agents/CLAUDE.md CLAUDE.md
 rm -rf /tmp/php-agents
@@ -48,17 +48,21 @@ Or copy manually:
 your-project/
 ├── .claude/
 │   ├── agents/
-│   │   ├── router.md
-│   │   ├── backend-dev.md
-│   │   ├── dba.md
-│   │   ├── ops.md
-│   │   └── qa.md
+│   │   ├── router.md          # task dispatcher
+│   │   ├── backend-dev.md     # PHP developer
+│   │   ├── dba.md             # database architect
+│   │   ├── ops.md             # DevOps/SRE
+│   │   └── qa.md              # QA engineer
 │   └── skills/
-│       ├── work-conventions.md
-│       ├── php-stack.md
-│       ├── db-operations.md
-│       ├── server-infra.md
-│       └── deploy-procedures.md
+│       ├── work-conventions.md     # git, code style, ADR, security
+│       ├── php-stack.md            # Laravel 11 / PHP 8.2 reference
+│       ├── repository-pattern.md   # contracts + repositories
+│       ├── testing-strategy.md     # PHPUnit conventions
+│       ├── db-operations.md        # migration safety, optimization
+│       ├── docker-workflow.md      # Docker Compose multi-env setup
+│       ├── server-infra.md         # Docker services, logs, health
+│       ├── deploy-procedures.md    # Makefile-driven deploy
+│       └── adr-documentation.md    # architecture decision records
 ├── CLAUDE.md
 └── ... your project files
 ```
@@ -68,8 +72,9 @@ your-project/
 Update these files with your project specifics:
 
 - **`skills/php-stack.md`** – framework version, project structure, key commands
-- **`skills/server-infra.md`** – server details, log paths, service names
-- **`skills/deploy-procedures.md`** – your deploy workflow, environments, rollback steps
+- **`skills/server-infra.md`** – Docker service names, ports, log paths
+- **`skills/deploy-procedures.md`** – your deploy workflow, environments, hosts
+- **`skills/docker-workflow.md`** – your Docker Compose services and Makefile targets
 - **`skills/work-conventions.md`** – branch naming, commit conventions, review process
 
 ### 3. Run Claude Code
@@ -86,17 +91,45 @@ Then describe your task naturally:
 
 The Router will classify this as a complex task and chain: DBA (if schema needed) → Backend Dev → QA → your review → Ops (deploy).
 
+### Using the Router directly
+
+You can invoke the router agent explicitly:
+
+```
+> @router Add pagination to the orders API
+```
+
+Or just describe your task – if a `CLAUDE.md` with the agent system is present, Claude Code will use the Router automatically.
+
 ## Skills
 
 Skills are shared knowledge bases that agents reference:
 
 | Skill | Used By | Purpose |
 |-------|---------|---------|
-| `work-conventions` | All agents | Git workflow, code review checklist, communication standards |
-| `php-stack` | Backend Dev | Laravel structure, key commands, coding patterns |
-| `db-operations` | DBA | Migration safety, query optimization, backup procedures |
-| `server-infra` | Ops | Service management, log locations, health checks |
-| `deploy-procedures` | Ops | Deploy steps, post-deploy verification, rollback |
+| `work-conventions` | All agents | Git workflow, code style (Pint/PHPStan), ADR, security |
+| `php-stack` | Backend Dev | Laravel 11 / PHP 8.2 structure, patterns, Makefile commands |
+| `repository-pattern` | Backend Dev | Contracts + Repositories, dependency injection |
+| `testing-strategy` | Backend Dev, QA | PHPUnit 11, feature vs unit, coverage, Allure reporting |
+| `db-operations` | DBA | Migration safety, query optimization, backup/restore |
+| `docker-workflow` | Ops, Backend Dev | Docker Compose multi-env, Makefile, staging deploys |
+| `server-infra` | Ops | Docker services, logs, health checks, troubleshooting |
+| `deploy-procedures` | Ops | Makefile-driven deploy, staging SSH, rollback procedures |
+| `adr-documentation` | All agents | When and how to write Architecture Decision Records |
+
+## Tech Stack (as configured)
+
+- **PHP 8.2+** / **Laravel 11**
+- **MySQL 8.0** – primary database
+- **Redis 7.4** – cache and queues
+- **Nginx** – web server
+- **Docker Compose** – local development and staging
+- **Makefile** – task runner (init, test, deploy, backup)
+- **PHPUnit 11** – testing
+- **Laravel Pint** – code style (PSR-12)
+- **Larastan / PHPStan** – static analysis
+- **Allure** – test reporting
+- **MinIO** – S3-compatible object storage (local dev)
 
 ## Safety Guardrails
 
@@ -105,6 +138,7 @@ Skills are shared knowledge bases that agents reference:
 - **Agents stay in scope** – Backend Dev won't touch migrations, DBA won't modify app code
 - **Rollback plans** are required for all production changes
 - **No hardcoded credentials** – enforced via code review checklist
+- **Sensitive data scan** – check for leaked tokens, IPs, domains before pushing
 
 ## Task State
 
@@ -124,6 +158,7 @@ model: opus  # or sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash
 skills:
   - relevant-skill
+  - work-conventions
 ---
 ```
 
@@ -142,10 +177,19 @@ description: What knowledge this provides
 
 Reference it in the agent's `skills:` frontmatter.
 
+### Adapting for other frameworks
+
+The agent definitions (router, dba, ops, qa) are framework-agnostic. To adapt for Symfony, Yii, or CodeIgniter:
+
+1. Replace `skills/php-stack.md` with your framework's structure and commands
+2. Update `skills/deploy-procedures.md` with your deploy workflow
+3. Adjust `skills/testing-strategy.md` for your test runner (PHPSpec, Codeception, etc.)
+
 ## Requirements
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI installed
 - A PHP/Laravel project (adaptable to other PHP frameworks)
+- Docker and Docker Compose (for the default infrastructure setup)
 
 ## License
 
