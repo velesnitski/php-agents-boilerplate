@@ -6,6 +6,7 @@ tools: Read, Bash, Glob, Grep, Edit
 skills:
   - server-infra
   - deploy-procedures
+  - docker-workflow
   - work-conventions
 ---
 

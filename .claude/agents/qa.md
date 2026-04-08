@@ -3,6 +3,9 @@ name: qa
 description: QA engineer – API tests, integration tests, regression checks
 model: sonnet
 tools: Read, Bash, Glob, Grep
+skills:
+  - testing-strategy
+  - work-conventions
 ---
 
 # QA

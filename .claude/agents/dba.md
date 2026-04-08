@@ -5,6 +5,7 @@ model: opus
 tools: Read, Edit, Write, Glob, Grep, Bash
 skills:
   - db-operations
+  - adr-documentation
   - work-conventions
 ---
 
