@@ -1,7 +1,7 @@
 ---
 name: router
 description: Task dispatcher and orchestrator for PHP team
-model: sonnet
+model: haiku
 tools: Agent(backend-dev, dba, ops, qa), Read, Glob, Grep
 ---
 
