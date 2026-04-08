@@ -1,6 +1,7 @@
 ---
 name: db-operations
 description: Database operations reference – migrations, optimization, safety
+user-invocable: false
 ---
 
 # Database Operations

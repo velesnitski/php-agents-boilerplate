@@ -1,6 +1,7 @@
 ---
 name: php-stack
 description: PHP 8.2 / Laravel 11 stack reference – project structure, patterns, tooling
+user-invocable: false
 ---
 
 # PHP Stack Reference

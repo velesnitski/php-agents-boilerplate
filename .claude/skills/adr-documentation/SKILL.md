@@ -1,6 +1,7 @@
 ---
 name: adr-documentation
 description: Architecture Decision Records – format, conventions, when to write
+user-invocable: false
 ---
 
 # Architecture Decision Records (ADR)

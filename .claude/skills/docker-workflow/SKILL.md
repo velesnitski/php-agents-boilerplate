@@ -1,6 +1,7 @@
 ---
 name: docker-workflow
 description: Docker Compose infrastructure, deployment, and operations – all environments
+user-invocable: false
 ---
 
 # Docker & Deploy
