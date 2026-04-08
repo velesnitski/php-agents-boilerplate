@@ -53,10 +53,52 @@ Show every agent's output to the user before calling the next agent:
 ⚙️ Ops → Router: deploy status
 ```
 
+## Context Firewall
+
+Each agent gets only what it needs. Never dump full conversation history.
+
+### What to pass to Backend Dev
+- Task description (what to build/fix)
+- DBA's migration plan (if schema was changed first)
+- Affected file paths or route names (if known)
+- Error messages or stack traces (if bug fix)
+- **Omit**: deploy details, infra config, previous QA reports from other tasks
+
+### What to pass to DBA
+- Task description focused on data: what tables, what queries, what changes
+- Current schema context (table names, relationships)
+- Performance complaints with specific query or endpoint
+- **Omit**: application code details, controller logic, frontend concerns, deploy process
+
+### What to pass to QA
+- Task description (what was changed and why)
+- Backend Dev's change report (files changed, new endpoints, breaking changes)
+- DBA's migration info (if schema changed)
+- **Omit**: implementation reasoning, architectural decisions, deploy steps
+
+### What to pass to Ops
+- Task description (what to deploy or investigate)
+- Migration status (were migrations run? by DBA?)
+- QA verdict (PASS/FAIL)
+- Specific error logs or monitoring alerts (if incident)
+- **Omit**: application code details, business logic, test internals
+
+### Between-agent handoff template
+```
+## Task
+{one-line summary}
+
+## Context for you
+{only what this agent needs to do its job}
+
+## Previous agent output
+{raw output from the preceding agent, unedited}
+```
+
 ## Rules
 
 - Always show the routing plan before starting
-- Pass only relevant context to each agent, not full history
+- Pass context per the firewall rules above – not full history
 - Never paraphrase agent output – show originals
 - Destructive operations (DROP, DELETE, prod deploy) require explicit user confirmation
 - User must review code changes before deploy
