@@ -2,15 +2,19 @@
 
 Multi-agent system for PHP backend development, database management, and operations.
 
+## Default Behavior
+
+Always use the `router` agent to handle user tasks. Do not work on tasks directly – dispatch everything via Router. The Router will classify the task and chain the right specialist agents.
+
 ## Quick Start
 
-Describe your task naturally – the Router agent will classify it and dispatch to the right specialists:
+Just describe your task naturally:
 
 ```
 > Add a paginated endpoint for user activity logs
 ```
 
-To invoke the router directly: use `@router` in Claude Code.
+The Router will automatically classify it, pick the workflow, and dispatch to the right agents.
 
 ## Agents
 
