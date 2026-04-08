@@ -79,27 +79,28 @@ Update these files with your project specifics:
 
 ### 3. Run Claude Code
 
+Everything goes through the **Router** agent by default. Three ways to use it:
+
+**Automatic** – just describe your task. CLAUDE.md instructs Claude to route via Router:
+
 ```bash
 claude
-```
-
-Then describe your task naturally:
-
-```
 > Add a new /api/users/{id}/activity endpoint that returns the last 30 days of user activity, paginated
 ```
 
-The Router will classify this as a complex task and chain: DBA (if schema needed) → Backend Dev → QA → your review → Ops (deploy).
-
-### Using the Router directly
-
-You can invoke the router agent explicitly:
+**Explicit** – invoke the Router directly with `@router`:
 
 ```
-> @router Add pagination to the orders API
+> @router Fix the slow query on /api/orders
 ```
 
-Or just describe your task – if a `CLAUDE.md` with the agent system is present, Claude Code will use the Router automatically.
+**CLI one-liner** – pass the task as an argument:
+
+```bash
+claude --agent router "Add pagination to the orders API"
+```
+
+All three end up in the same place – the Router classifies the task and chains the right agents (e.g. DBA → Backend Dev → QA → your review → Ops).
 
 ## Skills
 
