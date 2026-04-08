@@ -51,13 +51,12 @@ Each task creates `.tasks/YYMMDD-HHMM-slug.md` – agents append their sections 
 |-------|---------|---------|
 | `work-conventions` | all agents | Git, code style, ADR, sensitive data rules |
 | `php-stack` | backend-dev | Laravel 11 / PHP 8.2 structure, patterns, tooling |
-| `repository-pattern` | backend-dev | Contracts + repositories, DI binding |
 | `testing-strategy` | backend-dev, qa | PHPUnit conventions, feature vs unit, coverage |
 | `db-operations` | dba | Migration safety, optimization, backups |
-| `docker-workflow` | ops, backend-dev | Docker Compose multi-env setup, Makefile |
+| `docker-workflow` | ops | Docker Compose, Makefile, deploy, rollback |
 | `server-infra` | ops | Docker services, logs, health checks |
-| `deploy-procedures` | ops | Makefile-driven deploy, staging SSH, rollback |
 | `adr-documentation` | all agents | When and how to write ADRs |
+| `repository-pattern` | on-demand | Contracts + repositories (loaded when needed) |
 
 ## Customization
 
