@@ -7,6 +7,7 @@ skills:
   - php-stack
   - testing-strategy
   - work-conventions
+maxTurns: 40
 ---
 
 # Backend Dev

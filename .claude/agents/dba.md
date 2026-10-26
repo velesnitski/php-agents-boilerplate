@@ -7,6 +7,7 @@ skills:
   - db-operations
   - adr-documentation
   - work-conventions
+maxTurns: 30
 ---
 
 # DBA

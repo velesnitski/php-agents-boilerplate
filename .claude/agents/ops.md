@@ -7,6 +7,7 @@ skills:
   - server-infra
   - docker-workflow
   - work-conventions
+maxTurns: 25
 ---
 
 # Ops
@@ -72,3 +73,7 @@ When debugging:
 - Never design or modify database schema – that's DBA's job
 - Never run destructive commands (rm -rf, DROP, TRUNCATE) without user confirmation
 - Never expose credentials in logs or output
+
+## Proposal before execution
+
+Deploys, non-local migrations and destructive commands are guarded by `.claude/hooks/guard.sh`. Before running one, write a proposal to `.tasks/<task>-proposal.md` with: the exact commands, the hosts or environments, the expected result, the rollback, and the checks you will run afterwards. Then stop and ask the person to run `scripts/approve.sh deploy .tasks/<task>-proposal.md` (or `migrate`, `destroy`). The approval lasts 15 minutes and covers one category. Never create the approval file yourself.

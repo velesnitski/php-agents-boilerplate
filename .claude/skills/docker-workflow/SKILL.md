@@ -2,6 +2,9 @@
 name: docker-workflow
 description: Docker Compose infrastructure, deployment, and operations – all environments
 user-invocable: false
+version: 1.1.0
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Docker & Deploy
@@ -53,3 +56,7 @@ Rollback:   artisan down → switch image tag → pull → up → migrate:rollba
 - **Permission errors** → `make check-dir-permissions`
 - **Stale config** → `php artisan config:clear` inside PHP-FPM container
 - **Queue stuck** → `make restart-queue`, verify Redis is running
+
+## Guarded operations
+
+`make deploy`, `make build-release`, remote compose commands, remote shell sessions that run Docker, `artisan migrate` against a non-local environment and anything destructive (`down -v`, `volume rm`, `rm -rf`, `migrate:fresh`) are blocked by the guard hook until a person approves a written proposal: `scripts/approve.sh deploy <proposal.md>`. The approval expires after 15 minutes.

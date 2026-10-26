@@ -1,0 +1,16 @@
+# Keeps the agent configuration honest: skills versioned and locked, agents capped, tool references real.
+name: lint-agents
+on:
+  pull_request:
+    paths: [".claude/**", "skills.lock", "scripts/skills-lint.sh", ".mcp.json"]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: scripts/skills-lint.sh

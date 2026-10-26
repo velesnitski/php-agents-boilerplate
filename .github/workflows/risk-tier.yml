@@ -1,0 +1,48 @@
+# Required check: the change sets its risk tier, and the tier sets how many people must approve.
+# Re-runs on every push and every review, so the status flips green when the second approval lands.
+# Make it required in branch protection, together with your test workflow.
+name: risk-tier
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, dismissed]
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  tier:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Classify the change
+        id: tier
+        run: |
+          git fetch -q origin "${{ github.event.pull_request.base.ref }}"
+          node scripts/risk-tier.mjs "origin/${{ github.event.pull_request.base.ref }}" | tee tier.json
+          echo "tier=$(jq -r .tier tier.json)" >> "$GITHUB_OUTPUT"
+          echo "need=$(jq -r .humanApprovalsRequired tier.json)" >> "$GITHUB_OUTPUT"
+      - name: Count human approvals (not the author, not a bot)
+        id: approvals
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          n=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" --paginate \
+            --jq '[.[] | select(.state=="APPROVED") | select(.user.type!="Bot") | select(.user.login!="${{ github.event.pull_request.user.login }}") | .user.login] | unique | length')
+          echo "have=$n" >> "$GITHUB_OUTPUT"
+      - name: Gate
+        run: |
+          echo "## Risk tier: **${{ steps.tier.outputs.tier }}**" >> "$GITHUB_STEP_SUMMARY"
+          echo "$(cat tier.json)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Human approvals: ${{ steps.approvals.outputs.have }} of ${{ steps.tier.outputs.need }} required" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.approvals.outputs.have }}" -lt "${{ steps.tier.outputs.need }}" ]; then
+            echo "::error::${{ steps.tier.outputs.tier }}-tier change needs ${{ steps.tier.outputs.need }} human approval(s), has ${{ steps.approvals.outputs.have }}. An automated review never fills a human slot."
+            exit 1
+          fi

@@ -30,6 +30,21 @@ The Router classifies your request and picks the right workflow:
 
 Each agent produces structured output and stays within its defined scope. Agents explicitly document what they do *not* do, preventing scope creep.
 
+## Enforced guardrails, review tiers and provenance
+
+The rules an agent is expected to follow are enforced by the harness, not only described:
+
+| Mechanism | File | What it does |
+|---|---|---|
+| Guard hook | `.claude/hooks/guard.sh` | Blocks deploy, non-local migration and destructive commands until a person approves |
+| Approval | `scripts/approve.sh deploy\|migrate\|destroy [proposal]` | 15-minute, single-category approval, never committed |
+| Formatter hook | `.claude/hooks/format.sh` | Runs Pint on every edited PHP file |
+| Risk tier | `scripts/risk-tier.mjs`, `.github/workflows/risk-tier.yml` | High needs two human approvals, medium one, low none; a required check |
+| Automated review | `.github/workflows/claude-review.yml` | Opt-in, read-only, turn-capped, ends with a verdict; never an approval |
+| Provenance | `.github/pull_request_template.md`, `skills.lock`, `scripts/skills-lint.sh` | Tier, agents, skill versions, turns, cost and tests on every PR |
+
+Why: `docs/adr/0001-enforced-guardrails-and-review-tiers.md`.
+
 ## Installation
 
 ### 1. Clone into your project

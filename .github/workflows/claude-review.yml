@@ -1,0 +1,51 @@
+# Automated code review, opt-in and read-only. Runs when a PR gets the `claude-review` label or a
+# member comments `@claude review`. The reviewer may read and comment; it may not run package
+# managers, push, or approve, and its findings never count as a human approval (see risk-tier.yml).
+# Cost and turns are written to the job summary. Pin the action to a commit SHA before relying on it.
+name: claude-review
+on:
+  pull_request:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+permissions:
+  contents: read
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: true
+jobs:
+  review:
+    if: >-
+      (github.event_name == 'pull_request' && github.event.label.name == 'claude-review') ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request != null &&
+       startsWith(github.event.comment.body, '@claude review') &&
+       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write   # review comments only
+      id-token: write        # OIDC exchange for the Claude GitHub App
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refs/pull/${{ github.event.pull_request.number || github.event.issue.number }}/head
+          persist-credentials: false
+      - name: Review
+        uses: anthropics/claude-code-action@v1   # pin to a SHA in your fork
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            Review this pull request for correctness and security only. Read the diff against the base branch,
+            open the files it touches, run no package manager and change nothing. Post inline comments for findings
+            tagged Important (must fix before merge), Nit (optional) or Pre-existing (not introduced here). Drop
+            style and cleanup remarks; the formatter owns style. End with one line: VERDICT: clean | findings.
+          claude_args: >-
+            --max-turns 40
+            --allowedTools "Read,Grep,Glob,Bash(git diff:*),Bash(git log:*),Bash(git show:*),mcp__github_inline_comment__create_inline_comment"
+      - name: Verdict must be present
+        if: always()
+        run: |
+          f="${{ steps.review.outputs.execution_file || '' }}"
+          [ -z "$f" ] || grep -q "VERDICT:" "$f" || { echo "::error::review ended without a verdict"; exit 1; }

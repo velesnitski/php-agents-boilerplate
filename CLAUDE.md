@@ -39,8 +39,9 @@ Each task creates `.tasks/YYMMDD-HHMM-slug.md` – agents append their sections 
 
 ## Rules
 
-- Destructive operations require explicit user confirmation
-- User reviews code before deploy
+- Destructive operations, deploys and non-local migrations are blocked by `.claude/hooks/guard.sh` until a person runs `scripts/approve.sh <category> <proposal>` (15-minute approval, one category)
+- Every change gets a risk tier (`scripts/risk-tier.mjs`): high needs two human approvals, medium one, low none; an automated review never counts as a person
+- Edits are formatted by Pint through the PostToolUse hook; agents do not spend turns on style
 - Agents stay within their scope – see "What you do NOT do" in each agent
 - All bash commands should use `rtk` proxy when available for token savings
 - Every architectural decision must include an ADR in `docs/adr/`
@@ -57,6 +58,16 @@ Each task creates `.tasks/YYMMDD-HHMM-slug.md` – agents append their sections 
 | `server-infra` | ops | Docker services, logs, health checks |
 | `adr-documentation` | all agents | When and how to write ADRs |
 | `repository-pattern` | on-demand | Contracts + repositories (loaded when needed) |
+
+## Enforcement and provenance
+
+- `.claude/settings.json`: permissions allow-list, PreToolUse guard, PostToolUse formatter
+- `scripts/approve.sh`: human approval for `deploy` | `migrate` | `destroy`, gitignored, expires
+- `scripts/risk-tier.mjs` + `.github/workflows/risk-tier.yml`: tier as a required check
+- `.github/workflows/claude-review.yml`: opt-in, read-only automated review with a verdict
+- `scripts/skills-lint.sh` + `skills.lock`: every skill versioned, every tool reference real
+- `.github/pull_request_template.md`: tier, agents, skill versions, turns, cost, tests
+- Rationale: `docs/adr/0001-enforced-guardrails-and-review-tiers.md`
 
 ## Customization
 

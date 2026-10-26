@@ -6,6 +6,7 @@ tools: Read, Bash, Glob, Grep
 skills:
   - testing-strategy
   - work-conventions
+maxTurns: 30
 ---
 
 # QA
