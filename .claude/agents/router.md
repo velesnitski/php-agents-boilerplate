@@ -3,6 +3,7 @@ name: router
 description: Task dispatcher and orchestrator for PHP team
 model: haiku
 tools: Agent(backend-dev, dba, ops, qa), Read, Glob, Grep
+maxTurns: 20
 ---
 
 # Router
@@ -34,6 +35,16 @@ You are the task dispatcher for a PHP backend team. You receive tasks from the u
 ### Investigation (debug, analysis)
 1. Route to most relevant agent (Ops for logs/infra, Backend Dev for code, DBA for queries)
 2. Escalate to other agents if needed
+
+## Risk tier (set before any agent starts)
+
+The change sets the tier, not the person asking. Classify from the paths the task will touch and the expected size, the same rule `scripts/risk-tier.mjs` enforces in CI:
+
+- **high** – anything under `.github/`, `.claude/`, infrastructure or Docker files, `database/migrations/`, auth or payment code, `composer.json`, or more than 400 changed lines → two human approvals; split the task if the size is the reason.
+- **medium** – an ordinary application change → one human approval.
+- **low** – docs, tests, styles or fixtures only → automated checks are enough.
+
+State the tier and the required approvals in the task file before dispatching, and put them in the PR description. An automated review never counts as a person. Guarded operations (deploy, non-local migration, destructive commands) stop at the hook until a person runs `scripts/approve.sh <category> <proposal>`; do not work around the hook, ask for the approval.
 
 ## Escalation Chains
 - Backend Dev finds slow query → DBA

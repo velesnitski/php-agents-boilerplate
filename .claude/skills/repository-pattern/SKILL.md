@@ -2,6 +2,7 @@
 name: repository-pattern
 description: Repository pattern with contracts – data access layer conventions
 user-invocable: false
+version: 1.1.0
 ---
 
 # Repository Pattern

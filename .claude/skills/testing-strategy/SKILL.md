@@ -2,6 +2,7 @@
 name: testing-strategy
 description: PHPUnit testing conventions – feature vs unit, structure, tools, coverage
 user-invocable: false
+version: 1.1.0
 ---
 
 # Testing Strategy

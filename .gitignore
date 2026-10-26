@@ -3,3 +3,6 @@
 *.swo
 *~
 .tasks/
+
+# local human approvals for guarded operations (never committed)
+.claude/approvals/
